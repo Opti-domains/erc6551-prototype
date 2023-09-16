@@ -1,45 +1,88 @@
-import React from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import Layout from "../../components/Layout"
 import LayoutSideInfo from "../../components/LayoutSideInfo"
 import { LOREM } from "../../utils/lorem"
+import { NftDataWith6551, loadNfts } from "../../utils/nft"
+import { useAccount, usePublicClient } from "wagmi"
+import { Skeleton } from "antd"
+import PrimaryButton from "../../components/buttons/PrimaryButton"
+import optidomainsLogo from "../../assets/infinity-op-circle.svg"
 
 export default function ListsPage() {
+  const publicClient = usePublicClient();
+  const { address } = useAccount();
+  const [nfts, setNfts] = useState<NftDataWith6551[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchNfts = useCallback(async () => {
+    if (address) {
+      const data = await loadNfts(address, publicClient)
+      console.log(data)
+      setNfts(data)
+      setLoading(false)
+    }
+  }, [address, publicClient])
+
+  useEffect(() => {
+    if (address) {
+      fetchNfts();
+    }
+  }, [address, publicClient])
+
   return (
     <Layout>
-      <LayoutSideInfo>
-        <div>
-          <div className="mb-3">
-            <div className="text-2xl font-bold">Lists</div>
+      <div>
+        <div className="mb-4">
+          <div className="text-2xl font-bold">Town Domains</div>
+        </div>
+
+        <div className="flex flex-col mb-6">
+          <div className="rounded-2xl bg-white border border-gray-300 p-4 w-full flex items-center">
+            <div className="mr-3">
+              <img src={optidomainsLogo} style={{ width: 48 }} />
+            </div>
+
+            <div className="flex-grow">
+              <div className="text-xl">chomtana.town</div>
+              <div className="mt-1 text-sm">ERC-6551 Wallet: {0 == 0 ? '0x2F1a...6A72' : '0x843a...b1CA'}</div>
+            </div>
+
+            <div className="ml-3">
+              <PrimaryButton>
+                {0 == 0 ? 'WalletConnect' : 'Deploy Wallet'}
+              </PrimaryButton>
+            </div>
           </div>
+        </div>
 
+        <div className="mb-4">
+          <div className="text-2xl font-bold">Base of Bored</div>
+        </div>
+
+        {loading ? (
+          <div className="mt-5">
+            <Skeleton active />
+          </div>
+        ) : (
           <div className="grid grid-cols-3 gap-3">
-            {[1, 2, 3, 4, 5].map(i => (
-              <div className="rounded-2xl bg-white border border-gray-300 p-4 w-full transition hover:cursor-pointer hover:border-gray-400">
-                <div className="text-lg mb-1 font-bold">List {i}</div>
+            {nfts.map((nft, i) => (
+              <div className="rounded-2xl bg-white border border-gray-300 p-4 w-full" key={nft.token_id?.toString()}>
+                <div><img src={nft.token_url} style={{width: "100%"}} /></div>
 
-                <div className="flex mb-3">
-                  <div className="rounded-full bg-gray-300 mr-2" style={{ width: 20, height: 20 }}></div>
-                  <div className="font-bold text-sm">chomtana.eth</div>
-                </div>
+                <div className="text-xl mt-3">Base of Bored</div>
+                <div>#{nft.token_id?.toString()}</div>
+                <div className="mt-1">ERC-6551 Wallet: {i == 0 ? '0x1a8F...3B2d' : '0x843a...b1CA'}</div>
 
-                <div className="text-gray-600 line-clamp-2 text-sm mb-3">
-                  {LOREM}
-                </div>
-
-                <div className="flex flex-wrap">
-                  <div className="rounded bg-gray-200 text-gray-600 px-2 py-1 text-xs mr-2 mb-2">
-                    Collective Governance
-                  </div>
-
-                  <div className="rounded bg-gray-200 text-gray-600 px-2 py-1 text-xs mr-2 mb-2">
-                    OP Stack
-                  </div>
+                <div className="mt-3">
+                  <PrimaryButton>
+                    {i == 0 ? 'WalletConnect' : 'Deploy Wallet'}
+                  </PrimaryButton>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </LayoutSideInfo>
+        )}
+      </div>
     </Layout>
   )
 }

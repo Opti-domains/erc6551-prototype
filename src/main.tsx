@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import "./polyfills";
 import "./index.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -20,10 +21,10 @@ import { CreateListClassicScoringPageRoute } from "./pages/lists/create/CreateLi
 
 const router = createBrowserRouter([
   ListsPageRoute,
-  {
-    ...ListsPageRoute,
-    path: "/lists",
-  },
+  // {
+  //   ...ListsPageRoute,
+  //   path: "/lists",
+  // },
 
   // Create List
   {
@@ -42,11 +43,9 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RainbowKitConfigProvider>
-      <AntdAlertProvider>
-        <RouterProvider router={router} />
-      </AntdAlertProvider>
-    </RainbowKitConfigProvider>
-  </React.StrictMode>
+  <RainbowKitConfigProvider>
+    <AntdAlertProvider>
+      <RouterProvider router={router} />
+    </AntdAlertProvider>
+  </RainbowKitConfigProvider>
 );

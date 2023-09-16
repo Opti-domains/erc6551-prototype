@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@covalenthq/client-sdk": "^0.2.9",
     "@rainbow-me/rainbowkit": "^1.0.10",
     "@types/lodash": "^4.14.197",
     "antd": "^5.8.6",
+    "axios": "^1.5.0",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "match-sorter": "^6.3.1",

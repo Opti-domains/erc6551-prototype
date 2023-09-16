@@ -1,11 +1,12 @@
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { ReactNode } from "react";
+import { base } from "viem/chains";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { optimism, optimismGoerli } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, publicClient } = configureChains(
-  [optimismGoerli],
+  [base],
   [publicProvider()]
 );
 
